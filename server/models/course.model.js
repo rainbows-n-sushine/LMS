@@ -21,12 +21,6 @@ const courseSchema = new mongoose.Schema({
     courseThumbnail:{
         type:String
     },
-    enrolledStudents:[
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'User'
-        }
-    ],
     lectures:[
         {
             type:mongoose.Schema.Types.ObjectId,
@@ -35,7 +29,8 @@ const courseSchema = new mongoose.Schema({
     ],
     creator:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'User'
+        ref:'User',
+        default:null
     },
     isPublished:{
         type:Boolean,

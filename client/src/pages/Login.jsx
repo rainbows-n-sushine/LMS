@@ -58,24 +58,28 @@ const Login = () => {
   };
 
   const handleRegistration = async (type) => {
+    console.log('this is type: ', type )
     const inputData = type === "signup" ? signupInput : loginInput;
     const action = type === "signup" ? registerUser : loginUser;
+    console.log("value of action: ", action)
+    console.log("value of inputeData: ", inputData)
+
     await action(inputData);
   };
 
   useEffect(() => {
     if(registerIsSuccess && registerData){
-      toast.success(registerData.message || "Signup successful.")
+      toast.success(registerData?.message || "Signup successful.")
     }
     if(registerError){
-      toast.error(registerError.data.message || "Signup Failed");
+      toast.error(registerError?.data?.message || "Signup Failed");
     }
     if(loginIsSuccess && loginData){
-      toast.success(loginData.message || "Login successful.");
+      toast.success(loginData?.message || "Login successful.");
       navigate("/");
     }
     if(loginError){ 
-      toast.error(loginError.data.message || "login Failed");
+      toast.error(loginError?.data?.message || "login Failed");
     }
   }, [
     loginIsLoading,
