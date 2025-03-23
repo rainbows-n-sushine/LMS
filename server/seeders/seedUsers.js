@@ -16,19 +16,18 @@ export const seedUsers = async () => {
     }
 
     // Delete only previously seeded users
-    await User.deleteMany({ isSeeded: true });
+    await User.deleteMany();
 
     // Generate fake users with valid course references
     const users = Array.from({ length: 10 }).map(() => ({
       name: faker.person.fullName(), // Ensure this exists in your faker version
       email: faker.internet.email(),
-      password: faker.internet.password(),
+      password:"$2a$10$jyR3PW1Q0MZKibmCbPDAV.kxsgjjfbIZvs.qVaTlm5AaAWJFanGEK",        //faker.internet.password(),
       role: faker.helpers.arrayElement(["instructor", "student"]),
       enrolledCourses: courseIds.length
         ? faker.helpers.arrayElements(courseIds, faker.number.int({ min: 1, max: Math.min(3, courseIds.length) })) // Avoid selecting more than available courses
         : [], // If no courses, set an empty array
       photoUrl: faker.image.avatar(),
-      isSeeded: true, // Flag to identify seeded users
     }));
 
     await User.insertMany(users);

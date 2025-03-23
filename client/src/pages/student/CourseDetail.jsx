@@ -41,18 +41,18 @@ const CourseDetail = () => {
           <h1 className="font-bold text-2xl md:text-3xl">
             {course?.courseTitle}
           </h1>
-          <p className="text-base md:text-lg">Course Sub-title</p>
+          {/* <p className="text-base md:text-lg">Course Sub-title</p>
           <p>
             Created By{" "}
             <span className="text-[#C0C4FC] underline italic">
               {course?.creator.name}
             </span>
-          </p>
+          </p> */}
           <div className="flex items-center gap-2 text-sm">
             <BadgeInfo size={16} />
             <p>Last updated {course?.createdAt.split("T")[0]}</p>
           </div>
-          <p>Students enrolled: {course?.enrolledStudents.length}</p>
+          {/* <p>Students enrolled: {course?.enrolledStudents.length}</p> */}
         </div>
       </div>
       <div className="max-w-7xl mx-auto my-5 px-4 md:px-8 flex flex-col lg:flex-row justify-between gap-10">
@@ -86,7 +86,7 @@ const CourseDetail = () => {
                 <ReactPlayer
                   width="100%"
                   height={"100%"}
-                  url={course.lectures[0].videoUrl}
+                  url={course?.lectures[0]?.videoUrl}
                   controls={true}
                 />
               </div>
