@@ -3,6 +3,20 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 
+export const fetchUserProfile = async(userId) => {
+    try{
+      const user = await User.findById(userId)
+      console.log("This is the user:",user);
+      return user;  
+    }catch(err){
+        if(err){
+            console.log(err.message)
+        }
+
+    }
+    
+  };
+
 export const register = async (req,res) => {
     try {
        

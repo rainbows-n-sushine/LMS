@@ -1,16 +1,21 @@
-import Stripe from "stripe";
+
 import { Course } from "../models/course.model.js";
 import { CoursePurchase } from "../models/coursePurchase.model.js";
 import { Lecture } from "../models/lecture.model.js";
 import { User } from "../models/user.model.js";
+import {fetchUserProfile} from "./user.controller.js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const CHAPA_URL = process.env.CHAPA_URL || "https://api.chapa.co/v1/transaction/initialize"
+const CHAPA_AUTH = process.env.CHAPA_AUTH // || register to chapa and get the key
+
 
 export const createCheckoutSession = async (req, res) => {
   try {
+    console.log("We're in create checouy session")
     const userId = req.id;
     const { courseId } = req.body;
-
+    const userInfo= await fetchUserProfile(userId)
+    console.log(userInfo)
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: "Course not found!" });
 

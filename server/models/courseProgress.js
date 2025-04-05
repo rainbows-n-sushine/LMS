@@ -1,13 +1,22 @@
 import mongoose from "mongoose"
 
 const lectureProgressSchema = new mongoose.Schema({
-    lectureId:{type:String},
+    lectureId:{ 
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Lecture',
+            default:null},
     viewed:{type:Boolean}
 });
 
 const courseProgressSchema = new mongoose.Schema({
-    userId:{type:String},
-    courseId:{type:String},
+    userId:{  
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'User',
+            default:null},
+    courseId:{   
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Course',
+            default:null},
     completed:{type:Boolean},
     lectureProgress:[lectureProgressSchema]
 });

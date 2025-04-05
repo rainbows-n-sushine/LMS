@@ -62,7 +62,7 @@ const Login = () => {
     const inputData = type === "signup" ? signupInput : loginInput;
     const action = type === "signup" ? registerUser : loginUser;
     console.log("value of action: ", action)
-    console.log("value of inputeData: ", inputData)
+    console.log("value of input Data: ", inputData)
 
     await action(inputData);
   };

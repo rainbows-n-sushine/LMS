@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { faker } from "@faker-js/faker";
 import { Course } from "../models/course.model.js";
 import { User } from "../models/user.model.js";
+import { Lecture } from "../models/lecture.model.js"; // ✅ Make sure this path is correct
 import connectDB from "../database/db.js";
 
 const courseCategories = [
@@ -19,34 +20,43 @@ const courseCategories = [
 ];
 
 const seedCourses = async () => {
-  console.log("🚀 Seeding courses...");
+  try {
+    await connectDB(); // ✅ Ensure DB is connected
+    console.log("🚀 Seeding courses...");
 
-  // Fetch available users to assign as creators
-  try{
-  
+    await Course.deleteMany();
 
-  // Delete only previously seeded courses
-  await Course.deleteMany();
+    const allLectures = await Lecture.find(); // ✅ Fetch existing lectures
+    const users = await User.find(); // ✅ Fetch users to assign creators
 
-  const courses = Array.from({ length: 10 }).map(() => ({
-    courseTitle: faker.lorem.words(3),
-    subTitle: faker.lorem.sentence(),
-    description: faker.lorem.paragraph(),
-    category: faker.helpers.arrayElement(courseCategories),
-    courseLevel: faker.helpers.arrayElement(["Beginner", "Medium", "Advance"]),
-    coursePrice: faker.number.int({ min: 10, max: 500 }),
-    courseThumbnail: faker.image.urlPicsumPhotos(),
-    isPublished: faker.datatype.boolean(),
-  }));
+    if (allLectures.length === 0) {
+      throw new Error("No lectures found in the database. Please seed lectures first.");
+    }
 
-  await Course.insertMany(courses);
-  console.log("✅ Courses seeded successfully!");
+    const courses = Array.from({ length: 10 }).map(() => {
+      // Pick 2–5 random lecture IDs
+      const randomLectures = faker.helpers.arrayElements(allLectures, faker.number.int({ min: 2, max: 5 }));
+      const randomUser = faker.helpers.arrayElement(users);
 
-  }catch(error){
-    if(error){
-    console.log(error.message)
-  }}
-  
+      return {
+        courseTitle: faker.lorem.words(3),
+        subTitle: faker.lorem.sentence(),
+        description: faker.lorem.paragraph(),
+        category: faker.helpers.arrayElement(courseCategories),
+        courseLevel: faker.helpers.arrayElement(["Beginner", "Medium", "Advance"]),
+        coursePrice: faker.number.int({ min: 10, max: 500 }),
+        courseThumbnail: faker.image.urlPicsumPhotos(),
+        isPublished: faker.datatype.boolean(),
+        lectures: randomLectures.map(lec => lec._id),
+        creator: randomUser?._id || null,
+      };
+    });
+
+    await Course.insertMany(courses);
+    console.log("✅ Courses seeded successfully!");
+  } catch (error) {
+    console.error("❌ Seeding failed:", error.message);
+  } 
 };
 
 export { seedCourses };

@@ -1,5 +1,6 @@
 import { Menu, School } from "lucide-react";
 import React, { useEffect } from "react";
+import { getImageUrl } from "@/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,10 +48,10 @@ const Navbar = () => {
       {/* Desktop */}
       <div className="max-w-7xl mx-auto hidden md:flex justify-between items-center gap-10 h-full">
         <div className="flex items-center gap-2">
-          <School size={"30"} />
+          <div className="h-8 w-8 flex items-center justify-center pl-2"><img src={getImageUrl("merit-logo.png")} alt="Merit Academy logo"/></div>
           <Link to="/">
-            <h1 className="hidden md:block font-extrabold text-2xl">
-              E-Learning
+            <h1 className="hidden md:block font-extrabold txt-color-blue text-2xl text-blue-500 hover:text-blue-700">
+              Merit Academy
             </h1>
           </Link>
         </div>
@@ -102,8 +103,11 @@ const Navbar = () => {
         </div>
       </div>
       {/* Mobile device  */}
-      <div className="flex md:hidden items-center justify-between px-4 h-full">
-        <h1 className="font-extrabold text-2xl">E-learning</h1>
+      <div className="flex md:hidden items-center  justify-between  px-4 h-full">
+        <div className="flex md:hidden items-center  justify-center gap-3">
+      <div className="h-8 w-8 flex items-center justify-center"><img src={getImageUrl("merit-logo.png")} alt="Merit Academy logo"/></div>
+        <h1 className="font-extrabold text-2xl txt-color-blue text-blue-500 hover:text-blue-700">Merit Academy</h1>
+        </div>
         <MobileNavbar user={user}/>
       </div>
     </div>
