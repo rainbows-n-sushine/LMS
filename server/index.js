@@ -28,9 +28,10 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
     next();
   });
+  const origin=process.env.API_ORIGIN||"http://localhost:5173"
 
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin: origin,
     credentials:"true",
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type,Authorization",
