@@ -33,7 +33,7 @@ const navigate = useNavigate();
           />
           <Button
             type="submit"
-            className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-3 rounded-r-full hover:bg-blue-700 dark:hover:bg-blue-800"
+            className="bg-yellow-400 dark:bg-yellow text-black px-6 py-3 rounded-r-full hover:text-gray-400 hover:bg-yellow-200 dark:hover:bg-bg-yellow-400 dark:bg-yellow text-black px-6 py-3 rounded-r-full hover:text-white hover:bg-yellow-500 dark:hover:bg-gray"
           >
             Search
           </Button>
@@ -41,7 +41,7 @@ const navigate = useNavigate();
   
         <Button
           onClick={() => navigate(`/course/search?query`)}
-          className="bg-white dark:bg-gray-800 text-blue-600 rounded-full hover:bg-gray-200"
+          className="bg-black dark:bg-gray-800 text-yellow-200 rounded-full hover:bg-gray-300 hover:text-black"
         >
           Explore Courses
         </Button>
