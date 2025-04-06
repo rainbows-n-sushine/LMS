@@ -17,7 +17,7 @@ export default {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
-        ...colors, // ✅ include Tailwind's built-in colors
+        ...colors, // ✅ includes Tailwind's built-in colors
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -57,7 +57,14 @@ export default {
           '3': 'hsl(var(--chart-3))',
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))'
-        }
+        },
+        // Removed deprecated colors like lightBlue, warmGray, etc.
+        // New names to be used:
+        sky: colors.sky,
+        stone: colors.stone,
+        neutral: colors.neutral,
+        gray: colors.gray,
+        slate: colors.slate
       }
     }
   },
