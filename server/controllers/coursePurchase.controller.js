@@ -4,18 +4,28 @@ import { CoursePurchase } from "../models/coursePurchase.model.js";
 import { Lecture } from "../models/lecture.model.js";
 import { User } from "../models/user.model.js";
 import {fetchUserProfile} from "./user.controller.js";
+import {config} from "../middlewares/chapaAuthentication.js"
+import axios from "axios";
+import stripe from "stripe"
+const PORT=process.env.PORT;
 
 const CHAPA_URL = process.env.CHAPA_URL || "https://api.chapa.co/v1/transaction/initialize"
 const CHAPA_AUTH = process.env.CHAPA_AUTH // || register to chapa and get the key
+const CALLBACK_URL = process.env.CALLBACK_URL
+const RETURN_URL = process.env.RETURN_URL
+
 
 
 export const createCheckoutSession = async (req, res) => {
+
+
   try {
+
+
     console.log("We're in create checouy session")
     const userId = req.id;
     const { courseId } = req.body;
     const userInfo= await fetchUserProfile(userId)
-    console.log(userInfo)
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: "Course not found!" });
 
@@ -27,52 +37,90 @@ export const createCheckoutSession = async (req, res) => {
       status: "pending",
     });
 
-    // Create a Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "inr",
-            product_data: {
-              name: course.courseTitle,
-              images: [course.courseThumbnail],
-            },
-            unit_amount: course.coursePrice * 100, // Amount in paise (lowest denomination)
-          },
-          quantity: 1,
-        },
-      ],
-      mode: "payment",
-      success_url: `http://localhost:5173/course-progress/${courseId}`, // once payment successful redirect to course progress page
-      cancel_url: `http://localhost:5173/course-detail/${courseId}`,
-      metadata: {
-        courseId: courseId,
-        userId: userId,
-      },
-      shipping_address_collection: {
-        allowed_countries: ["IN"], // Optionally restrict allowed countries
-      },
-    });
+    const TEXT_REF = "tx-mylms12345-" + Date.now()
 
-    if (!session.url) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Error while creating session" });
+        // form data
+        const firstName=userInfo.name.trim().split(' ')[0]
+        const lastName=userInfo.name.trim().split(' ')[2] ? userInfo.name.trim().split(' ')[2]: "empty"
+        const data = {
+          amount: course.coursePrice, 
+          currency: 'ETB',
+          email: userInfo.email,
+          first_name:firstName,
+          last_name: lastName,
+          tx_ref: TEXT_REF,
+          callback_url: CALLBACK_URL + TEXT_REF,
+          return_url: RETURN_URL
+      }
+
+      // console.log('this is the value of res.', data)
+      
+    const lastPurchase = await CoursePurchase.findOne().sort({ _id: -1 });
+
+    // Step 2: Generate new paymentId
+    let newPaymentId = 'PAY-1000'; // default if none exists
+
+    if (lastPurchase && lastPurchase.paymentId) {
+        // Extract the numeric part and increment
+        const lastIdNum = parseInt(lastPurchase.paymentId.split('-')[1], 10);
+        newPaymentId = `PAY-${lastIdNum + 1}`;
     }
-
-    // Save the purchase record
-    newPurchase.paymentId = session.id;
+    newPurchase.paymentId = newPaymentId;
     await newPurchase.save();
 
-    return res.status(200).json({
-      success: true,
-      url: session.url, // Return the Stripe checkout URL
-    });
-  } catch (error) {
-    console.log(error);
+   
+
+      // post request to chapa
+      await axios.post(CHAPA_URL, data, config)
+          .then((response) => {
+            // Save the purchase record
+            console.log("This is response:" ,response)
+            
+            return res.status(200).json({
+              success: true,
+              url: response.data.data.checkout_url, // Return the Stripe checkout URL
+            });
+              // res.redirect(response.data.data.checkout_url)
+          })
+          .catch((err) => console.log(err))
+         
+          
+}catch(err){
+  if(err){
+    console.log(err)
   }
+}
+
+  
 };
+
+
+
+//Verify payment
+
+export const verifyPayment= async (req, res) => {
+    
+  //verify the transaction 
+  await axios.get("https://api.chapa.co/v1/transaction/verify/" + req.params.id, config)
+      .then((response) => {
+        console.log(response.data)
+          console.log("Payment was successfully verified")
+      }) 
+      .catch((err) => console.log("Payment can't be verfied", err))
+}
+
+
+///
+export const paymentSuccess= async (req, res) => {
+  res.render("success")
+}
+
+
+
+
+
+
+
 
 export const stripeWebhook = async (req, res) => {
   let event;

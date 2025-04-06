@@ -50,7 +50,7 @@ const Navbar = () => {
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 flex items-center justify-center pl-2"><img src={getImageUrl("merit-logo.png")} alt="Merit Academy logo"/></div>
           <Link to="/">
-            <h1 className="hidden md:block font-extrabold txt-color-blue text-2xl text-blue-500 hover:text-blue-700">
+            <h1 className="hidden md:block font-extrabold txt-color-yellow text-2xl text-black hover:text-yellow-400">
               Merit Academy
             </h1>
           </Link>
@@ -93,10 +93,10 @@ const Navbar = () => {
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={() => navigate("/login")}>
+              <Button variant="outline" className="hover:bg-yellow-400" onClick={() => navigate("/login")}>
                 Login
               </Button>
-              <Button onClick={() => navigate("/login")}>Signup</Button>
+              <Button className="hover:bg-yellow-400" onClick={() => navigate("/login")}>Signup</Button>
             </div>
           )}
           <DarkMode />
