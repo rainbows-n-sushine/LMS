@@ -106,7 +106,7 @@ const Navbar = () => {
       <div className="flex md:hidden items-center  justify-between  px-4 h-full">
         <div className="flex md:hidden items-center  justify-center gap-3">
       <div className="h-8 w-8 flex items-center justify-center"><img src={getImageUrl("merit-logo.png")} alt="Merit Academy logo"/></div>
-        <h1 className="font-extrabold text-2xl txt-color-blue text-blue-500 hover:text-blue-700">Merit Academy</h1>
+        <h1 className=" font-extrabold txt-color-yellow text-2xl text-black hover:text-yellow-400">Merit Academy</h1>
         </div>
         <MobileNavbar user={user}/>
       </div>

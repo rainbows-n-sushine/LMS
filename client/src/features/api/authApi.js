@@ -6,10 +6,17 @@ const USER_API = `${url}/api/v1/user/`
 
 export const authApi = createApi({
     reducerPath:"authApi",
-    baseQuery:fetchBaseQuery({
-        baseUrl:USER_API,
-        credentials:'include'
-    }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: USER_API,
+        prepareHeaders: (headers) => {
+          const token = localStorage.getItem("token");
+          if (token) {
+            headers.set("Authorization", `Bearer ${token}`);
+          }
+          return headers;
+        },
+      }),
+      
     endpoints: (builder) => ({
         registerUser: builder.mutation({
             query: (inputData) => ({
@@ -24,27 +31,35 @@ export const authApi = createApi({
                 method:"POST",
                 body:inputData
             }),
-            async onQueryStarted(_, {queryFulfilled, dispatch}) {
+            onQueryStarted: async (_, { queryFulfilled, dispatch }) => {
                 try {
-                    const result = await queryFulfilled;
-                    dispatch(userLoggedIn({user:result.data.user}));
+                  const result = await queryFulfilled;
+                  const token = result.data.token;
+                  if (token) {
+                    localStorage.setItem("token", token); // <-- Add this
+                  }
+                  dispatch(userLoggedIn({ user: result.data.user }));
                 } catch (error) {
-                    console.log(error);
+                  console.log(error);
                 }
-            }
+              }
+              
         }),
         logoutUser: builder.mutation({
             query: () => ({
                 url:"logout",
                 method:"GET"
             }),
-            async onQueryStarted(_, {queryFulfilled, dispatch}) {
-                try { 
-                    dispatch(userLoggedOut());
+            onQueryStarted: async (_, { queryFulfilled, dispatch }) => {
+                try {
+                  await queryFulfilled;
+                  localStorage.removeItem("token"); // <-- Clear token
+                  dispatch(userLoggedOut());
                 } catch (error) {
-                    console.log(error);
+                  console.log(error);
                 }
-            }
+              }
+              
         }),
         loadUser: builder.query({
             query: () => ({

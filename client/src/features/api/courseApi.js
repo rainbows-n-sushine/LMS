@@ -9,6 +9,13 @@ export const courseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_API,
     credentials: "include",
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     createCourse: builder.mutation({
