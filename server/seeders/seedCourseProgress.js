@@ -7,25 +7,22 @@ import { Lecture } from "../models/lecture.model.js";
 import connectDB from "../database/db.js";
 
 const seedCourseProgress = async () => {
-  console.log("🚀 Seeding course progress...");
+  console.log("Seeding course progress...");
 
-  await connectDB(); // Ensure database connection
-
-  // Fetch users, courses, and lectures
   const users = await User.find({}, "_id");
   const courses = await Course.find({}, "_id");
   const lectures = await Lecture.find({}, "_id");
 
   if (users.length === 0 || courses.length === 0 || lectures.length === 0) {
-    console.log("⚠️ No users, courses, or lectures found! Please seed them first.");
+    console.log(" No users, courses, or lectures found! Please seed them first.");
     mongoose.connection.close();
     return;
   }
 
-  // Generate course progress data for users
+  
   const courseProgressData = users.map((user) => {
-    const course = faker.helpers.arrayElement(courses); // Assign a random course
-    const courseLectures = lectures.filter((lecture) => faker.datatype.boolean()); // Select some lectures for progress
+    const course = faker.helpers.arrayElement(courses); 
+    const courseLectures = lectures.filter((lecture) => faker.datatype.boolean()); 
 
     return {
       userId: user._id,
@@ -39,13 +36,10 @@ const seedCourseProgress = async () => {
   });
 
   await CourseProgress.insertMany(courseProgressData);
-  console.log("✅ Course progress seeded successfully!");
+  console.log("Course progress seeded successfully!");
 
-  mongoose.connection.close(); // Close connection
-  console.log("🌱 Database seeding completed.");
 };
 
-// Run directly if executed from CLI
 if (import.meta.url === `file://${process.argv[1]}`) {
   seedCourseProgress();
 }

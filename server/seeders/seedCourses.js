@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { faker } from "@faker-js/faker";
 import { Course } from "../models/course.model.js";
 import { User } from "../models/user.model.js";
-import { Lecture } from "../models/lecture.model.js"; // ✅ Make sure this path is correct
+import { Lecture } from "../models/lecture.model.js"; 
 import connectDB from "../database/db.js";
 
 const courseCategories = [
@@ -21,20 +21,20 @@ const courseCategories = [
 
 const seedCourses = async () => {
   try {
-    await connectDB(); // ✅ Ensure DB is connected
-    console.log("🚀 Seeding courses...");
+    await connectDB(); 
+    console.log(" Seeding courses...");
 
     await Course.deleteMany();
 
-    const allLectures = await Lecture.find(); // ✅ Fetch existing lectures
-    const users = await User.find(); // ✅ Fetch users to assign creators
+    const allLectures = await Lecture.find(); 
+    const users = await User.find(); 
 
     if (allLectures.length === 0) {
       throw new Error("No lectures found in the database. Please seed lectures first.");
     }
 
     const courses = Array.from({ length: 10 }).map(() => {
-      // Pick 2–5 random lecture IDs
+
       const randomLectures = faker.helpers.arrayElements(allLectures, faker.number.int({ min: 2, max: 5 }));
       const randomUser = faker.helpers.arrayElement(users);
 
@@ -53,9 +53,9 @@ const seedCourses = async () => {
     });
 
     await Course.insertMany(courses);
-    console.log("✅ Courses seeded successfully!");
+    console.log(" Courses seeded successfully!");
   } catch (error) {
-    console.error("❌ Seeding failed:", error.message);
+    console.error(" Seeding failed:", error.message);
   } 
 };
 
