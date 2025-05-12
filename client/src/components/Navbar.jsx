@@ -50,7 +50,7 @@ const Navbar = () => {
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 flex items-center justify-center pl-2"><img src={getImageUrl("merit-logo.png")} alt="Merit Academy logo"/></div>
           <Link to="/">
-            <h1 className="hidden md:block font-extrabold txt-color-yellow text-2xl text-black hover:text-yellow-400">
+            <h1 className="hidden md:block font-extrabold text-yellow-400  text-2xl  hover:text-yellow-600">
               Merit Academy
             </h1>
           </Link>

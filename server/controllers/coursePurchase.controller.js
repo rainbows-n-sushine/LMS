@@ -22,7 +22,7 @@ export const createCheckoutSession = async (req, res) => {
   try {
 
 
-    console.log("We're in create checouy session")
+    console.log("We're in create checout session")
     const userId = req.id;
     const { courseId } = req.body;
     const userInfo= await fetchUserProfile(userId)
@@ -53,15 +53,15 @@ export const createCheckoutSession = async (req, res) => {
           return_url: RETURN_URL
       }
 
-      // console.log('this is the value of res.', data)
+ 
       
     const lastPurchase = await CoursePurchase.findOne().sort({ _id: -1 });
 
-    // Step 2: Generate new paymentId
-    let newPaymentId = 'PAY-1000'; // default if none exists
+   
+    let newPaymentId = 'PAY-1000'; 
 
     if (lastPurchase && lastPurchase.paymentId) {
-        // Extract the numeric part and increment
+        
         const lastIdNum = parseInt(lastPurchase.paymentId.split('-')[1], 10);
         newPaymentId = `PAY-${lastIdNum + 1}`;
     }
@@ -70,17 +70,17 @@ export const createCheckoutSession = async (req, res) => {
 
    
 
-      // post request to chapa
+
       await axios.post(CHAPA_URL, data, config)
           .then((response) => {
-            // Save the purchase record
+      
             console.log("This is response:" ,response)
             
             return res.status(200).json({
               success: true,
-              url: response.data.data.checkout_url, // Return the Stripe checkout URL
+              url: response.data.data.checkout_url,
             });
-              // res.redirect(response.data.data.checkout_url)
+              res.redirect(response.data.data.checkout_url)
           })
           .catch((err) => console.log(err))
          

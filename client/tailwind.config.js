@@ -58,8 +58,7 @@ export default {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))'
         },
-        // Removed deprecated colors like lightBlue, warmGray, etc.
-        // New names to be used:
+      
         sky: colors.sky,
         stone: colors.stone,
         neutral: colors.neutral,
