@@ -48,7 +48,7 @@ const Navbar = () => {
       {/* Desktop */}
       <div className="max-w-7xl mx-auto hidden md:flex justify-between items-center gap-10 h-full">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 flex items-center justify-center pl-2"><img src={getImageUrl("merit-logo.png")} alt="Merit Academy logo"/></div>
+          <div className="h-8 w-8 flex items-center justify-center pl-2 invert-0 dark:invert-0"><img src={getImageUrl("merit-logo.png")} alt="Merit Academy logo"/></div>
           <Link to="/">
             <h1 className="hidden md:block font-extrabold text-yellow-400  text-2xl  hover:text-yellow-600">
               Merit Academy
